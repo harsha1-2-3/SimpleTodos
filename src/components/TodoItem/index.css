@@ -1,12 +1,12 @@
-/* Write your CSS here */
-
 .todo {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 0px;
-  margin: 0px;
+  padding: 10px;
+  margin: 10px;
+  border: 1px solid lightgrey;
+  border-radius: 5px;
 }
 
 .para {
@@ -15,13 +15,63 @@
   margin: 10px;
 }
 
-.btn {
+.paraLine {
+  text-decoration: line-through;
+}
+
+.editBtn {
+  color: blue;
+  background-color: transparent;
+  border: 1.5px solid blue;
+  border-radius: 5px;
+  text-align: center;
+  padding: 5px;
+  margin: 5px;
+  width: 40px;
+  cursor: pointer;
+  outline: none;
+}
+
+.deleteBtn {
   color: #ff0b37;
   background-color: transparent;
   border: 1.5px solid #ff0b37;
-  border-radius: 12px;
+  border-radius: 5px;
   text-align: center;
-  padding: 10px;
-  margin: 10px;
-  width: 90px;
+  padding: 5px;
+  margin: 5px;
+  width: 50px;
+  cursor: pointer;
+  outline: none;
+}
+@media (min-width: 768px) {
+  .inputBox {
+    padding: 10px;
+    width: 250px;
+    margin-right: 10px;
+  }
+
+  .addBtn {
+    height: 38px;
+    width: 55px;
+  }
+
+  .todo {
+    min-width: 100%;
+  }
+
+  .para {
+    font-size: 23px;
+    margin-right: 40px;
+  }
+
+  .editBtn {
+    width: 60px;
+    font-size: 20px;
+  }
+
+  .deleteBtn {
+    width: 80px;
+    font-size: 20px;
+  }
 }

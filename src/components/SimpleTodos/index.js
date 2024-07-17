@@ -1,9 +1,7 @@
-// Write your code here
 import {Component} from 'react'
-
+import {v4 as uuidv4} from 'uuid'
+import TodoItem from '../TodoItem'
 import './index.css'
-
-import TodoItem from '../TodoItem/index'
 
 const initialTodosList = [
   {
@@ -41,29 +39,100 @@ const initialTodosList = [
 ]
 
 class SimpleTodos extends Component {
-  state = {todosList: initialTodosList}
+  state = {
+    todosList: initialTodosList,
+    inputValue: '',
+  }
+
+  onChangeNewTodo = event => {
+    this.setState({inputValue: event.target.value})
+  }
+
+  onAddTodo = () => {
+    const {inputValue} = this.state
+
+    const [title, countStr] = inputValue.split(' ')
+    const count = parseInt(countStr, 10)
+
+    if (!Number.isNaN(count) && count > 0) {
+      const newTodos = Array.from({length: count}).map(() => ({
+        id: uuidv4(),
+        title: title.trim(),
+        isEditing: false,
+        isChecked: false,
+      }))
+
+      this.setState(prevState => ({
+        todosList: [...prevState.todosList, ...newTodos],
+        inputValue: '',
+      }))
+    } else {
+      const newTodo = {
+        id: uuidv4(),
+        title: inputValue,
+        isEditing: false,
+        isChecked: false,
+      }
+
+      this.setState(prevState => ({
+        todosList: [...prevState.todosList, newTodo],
+        inputValue: '',
+      }))
+    }
+  }
+
+  onUpdateTodo = (id, updatedTodo) => {
+    this.setState(prevState => ({
+      todosList: prevState.todosList.map(todo =>
+        todo.id === id ? {...todo, ...updatedTodo} : todo,
+      ),
+    }))
+  }
 
   onDeleteTodo = id => {
     const {todosList} = this.state
-    const filteredList = todosList.filter(each => each.id !== id)
-    this.setState({todosList: filteredList})
+    const filteredTodos = todosList.filter(each => each.id !== id)
+    this.setState({todosList: filteredTodos})
   }
 
-  render() {
+  renderTodos = () => {
     const {todosList} = this.state
 
     return (
+      <ul className="todosCont">
+        {todosList.map(each => (
+          <TodoItem
+            key={each.id}
+            todoDetails={each}
+            onUpdateTodo={this.onUpdateTodo}
+            onDeleteTodo={this.onDeleteTodo}
+          />
+        ))}
+      </ul>
+    )
+  }
+
+  render() {
+    const {inputValue} = this.state
+
+    return (
       <div className="bg">
-        <ul className="todoCont">
+        <div className="todoListCont">
           <h1 className="head">Simple Todos</h1>
-          {todosList.map(eachTodo => (
-            <TodoItem
-              onDeleteTodo={this.onDeleteTodo}
-              todosList={eachTodo}
-              key={eachTodo.id}
+          <div className="inputCont">
+            <input
+              value={inputValue}
+              onChange={this.onChangeNewTodo}
+              className="inputBox"
+              placeholder="Title..."
+              type="text"
             />
-          ))}
-        </ul>
+            <button type="button" onClick={this.onAddTodo} className="addBtn">
+              Add
+            </button>
+          </div>
+          {this.renderTodos()}
+        </div>
       </div>
     )
   }
